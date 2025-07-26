@@ -12,8 +12,9 @@ const port = 8000;
 // For testing: Use test keys (sk_test_...)
 // For production: Use live keys (sk_live_...)
 
-// TEMPORARY TEST KEY - Replace with your actual key
-const stripe = new Stripe('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');
+// Use environment variable for security
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY || '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';
+const stripe = new Stripe(stripeSecretKey);
 
 app.use(bodyParser.json());
 app.use(express.json());
