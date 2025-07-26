@@ -7,6 +7,14 @@ import Stripe from "stripe";
 const app = express();
 const port = 8000;
 
+const corsOptions = {
+  origin: ['https://swimwear-rouge.vercel.app', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
 // Initialize Stripe with your secret key
 // IMPORTANT: Replace these with your actual Stripe keys from your Stripe dashboard
 // For testing: Use test keys (sk_test_...)
@@ -17,9 +25,11 @@ const stripeSecretKey =
   "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";
 const stripe = new Stripe(stripeSecretKey);
 
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(cors());
 
 app.options("*", cors());
 
