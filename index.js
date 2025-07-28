@@ -7,6 +7,8 @@ import Stripe from "stripe";
 const app = express();
 const port = 8000;
 
+// Test Development
+
 const corsOptions = {
   origin: ['https://swimwear-rouge.vercel.app', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
