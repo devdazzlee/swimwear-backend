@@ -8,11 +8,11 @@ const app = express();
 const port = 8000;
 
 const corsOptions = {
-  origin: ["https://swimwear-rouge.vercel.app", "http://localhost:3000"],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  origin: ['https://swimwear-rouge.vercel.app', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
-  optionsSuccessStatus: 200,
+  optionsSuccessStatus: 200
 };
 
 // Initialize Stripe with your secret key
@@ -26,7 +26,7 @@ const stripeSecretKey =
 const stripe = new Stripe(stripeSecretKey);
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(express.json());
@@ -160,16 +160,12 @@ app.post("/api/create-payment-intent", async (req, res) => {
       currency
     );
 
-    // Create a PaymentIntent with the order amount, currency, and descriptor
+    // Create a PaymentIntent with the order amount and currency
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100), // Convert to cents
       currency: currency,
       automatic_payment_methods: {
         enabled: true,
-      },
-      statement_descriptor: "SWIMWEAR ROUGE", // Must be <= 22 chars
-      metadata: {
-        merchant_name: "Swimwear Rouge",
       },
     });
 
