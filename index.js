@@ -9,7 +9,7 @@ const app = express();
 const port = 8000;
 
 const corsOptions = {
-  origin: ["https://swimwear-rouge.vercel.app", "http://localhost:3000" , "http://localhost:3001"],
+  origin: ["https://swimwear-rouge.vercel.app", "http://localhost:3000" , "http://localhost:3001" , "https://dashboard-p679.vercel.app"],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
