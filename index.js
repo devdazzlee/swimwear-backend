@@ -3,18 +3,17 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import nodemailer from "nodemailer";
 import Stripe from "stripe";
+import { SiteStatus } from "./Models/toogle.js";
 
 const app = express();
 const port = 8000;
 
-// Test Development
-
 const corsOptions = {
-  origin: ['https://swimwear-rouge.vercel.app', 'http://localhost:3000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: ["https://swimwear-rouge.vercel.app", "http://localhost:3000" , "http://localhost:3001"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 };
 
 // Initialize Stripe with your secret key
@@ -28,7 +27,7 @@ const stripeSecretKey =
 const stripe = new Stripe(stripeSecretKey);
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(express.json());
@@ -186,6 +185,39 @@ app.post("/api/create-payment-intent", async (req, res) => {
       error: "Failed to create payment intent",
       details: error.message,
     });
+  }
+});
+
+// GET current site status
+app.get("/api/site-status", async (req, res) => {
+  try {
+    let doc = await SiteStatus.findById("siteStatus");
+    if (!doc) {
+      doc = await SiteStatus.create({ _id: "siteStatus", isLive: true });
+    }
+    res.json({ isLive: doc.isLive });
+  } catch (error) {
+    console.error("Error fetching site status:", error);
+    res.status(500).json({ error: "Failed to fetch site status" });
+  }
+});
+
+// POST to update site status
+app.post("/api/site-status", async (req, res) => {
+  try {
+    const { live } = req.body;
+    if (typeof live !== "boolean") {
+      return res.status(400).json({ success: false, message: "Invalid value" });
+    }
+    await SiteStatus.findByIdAndUpdate(
+      "siteStatus",
+      { isLive: live },
+      { upsert: true }
+    );
+    res.json({ success: true, isLive: live });
+  } catch (error) {
+    console.error("Error updating site status:", error);
+    res.status(500).json({ error: "Failed to update site status" });
   }
 });
 
